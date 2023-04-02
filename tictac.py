@@ -48,7 +48,39 @@ def num_to_coord(num, board):
 	column_of_number = (num - row_of_number * columns) - 1
 	result = [row_of_number, column_of_number]
 	return result
+
+def check_horizontal(board, rows = 3, columns = 3):
+	for row in range(rows):
+		score = 0
+		for column in range(columns-1):
+			if board[row][column] == board[row][column+1]:
+				score +=1
+			if score == columns - 1:
+				print('horizontal win')
 	
+def check_vertical(board, rows = 3, columns = 3):
+	for column in range(columns):
+		score = 0
+		for row in range(rows-1):
+			if board[row][column] == board[row+1][column]:
+				score +=1
+			if score == rows - 1:
+				print('vertical win')
+
+def check_diag(board, rows = 3, columns = 3):
+	score = 0
+	for cell in range(columns-1):
+		if board[cell][cell] == board[cell+1][cell+1]:
+			score += 1
+		if score == rows - 1:
+			print('diagonal win')
+	score_rl = 0
+	for cell in range(rows-1):
+		# check right to left
+		if board[cell][-(cell+1)] == board[cell+1][-(cell+2)]:
+			score_rl +=1
+		if score_rl == rows - 1:
+			print('diagonal win')
 ##Main loop##
 board = make_board(HEIGHT, WIDTH)
 player = 1
@@ -61,8 +93,10 @@ while True:
 	#elif check if somebody has won, need function for that
 	else:
 		board = record_choice(board, player, num_to_coord(choice, board))
+		check_vertical(board)
+		check_horizontal(board)
+		check_diag(board)
 		if player == 1:
 			player = 2
 		else:
 			player = 1
-
