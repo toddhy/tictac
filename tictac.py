@@ -15,14 +15,16 @@ def make_board(width, height):
 	return board
 
 def print_board(board):
+	print("")
 	for row in board:
 		print(row)
+	print("")
 
 def player_choice(board):
 	#ask for input and return an int within board range
 	max = len(board) * len(board[0])
 	while True:
-		choice = input("select a square, or q to exit ")
+		choice = input("select a square, or q to exit: ")
 		if choice == 'q':
 			return 'quit'
 		elif choice.isdigit() == False:
@@ -56,7 +58,7 @@ def check_horizontal(board, rows = 3, columns = 3):
 			if board[row][column] == board[row][column+1]:
 				score +=1
 			if score == columns - 1:
-				print('horizontal win')
+				return True
 	
 def check_vertical(board, rows = 3, columns = 3):
 	for column in range(columns):
@@ -65,7 +67,7 @@ def check_vertical(board, rows = 3, columns = 3):
 			if board[row][column] == board[row+1][column]:
 				score +=1
 			if score == rows - 1:
-				print('vertical win')
+				return True
 
 def check_diag(board, rows = 3, columns = 3):
 	score = 0
@@ -73,30 +75,41 @@ def check_diag(board, rows = 3, columns = 3):
 		if board[cell][cell] == board[cell+1][cell+1]:
 			score += 1
 		if score == rows - 1:
-			print('diagonal win')
+			return True
 	score_rl = 0
 	for cell in range(rows-1):
 		# check right to left
 		if board[cell][-(cell+1)] == board[cell+1][-(cell+2)]:
 			score_rl +=1
 		if score_rl == rows - 1:
-			print('diagonal win')
+			return True
+def check_for_win(board):
+	if check_vertical(board):
+		return True
+	elif check_horizontal(board):
+		return True
+	elif check_diag(board):
+		return True
+	else:
+		return False
+	
 ##Main loop##
 board = make_board(HEIGHT, WIDTH)
 player = 1
 while True:
 	print_board(board)
+	print("Player %s turn" % (player))
 	choice = player_choice(board)
 	if choice == 'quit':
 		break
 	#elif choice already has an X or O, print that
-	#elif check if somebody has won, need function for that
 	else:
 		board = record_choice(board, player, num_to_coord(choice, board))
-		check_vertical(board)
-		check_horizontal(board)
-		check_diag(board)
-		if player == 1:
+		if check_for_win(board):
+			print_board(board)
+			print("Player %s wins!" % (player))
+			break
+		elif player == 1:
 			player = 2
 		else:
 			player = 1
