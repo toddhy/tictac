@@ -10,7 +10,7 @@ def make_board(width, height):
 	for x in range(height):
 		board.append([]) # make (width) number of rows
 		for y in range(width):
-			board[x].append([i]) # make (height) number of columns 
+			board[x].append(i) # make (height) number of columns 
 			i += 1
 	return board
 
@@ -93,6 +93,14 @@ def check_for_win(board):
 	else:
 		return False
 	
+def if_occupied(board, square_number):
+	coord = num_to_coord(square_number, board)
+	if isinstance(board[coord[0]][coord[1]], str):
+		return True
+	else:
+		return False
+	pass
+
 ##Main loop##
 board = make_board(HEIGHT, WIDTH)
 player = 1
@@ -103,6 +111,8 @@ while True:
 	if choice == 'quit':
 		break
 	#elif choice already has an X or O, print that
+	elif if_occupied(board, choice):
+		print("Square is already occupied.")
 	else:
 		board = record_choice(board, player, num_to_coord(choice, board))
 		if check_for_win(board):
